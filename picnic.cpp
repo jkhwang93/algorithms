@@ -1,6 +1,11 @@
+//
+//  Problem : https://algospot.com/judge/problem/read/PICNIC
+//
+//  Created by JK on 2018. 1. 14.
+//
+
 #include <stdio.h>
 #define MAX_STUDENT 10
-#define MAX_PAIR (MAX_STUDENT*(MAX_STUDENT-1))/2
 
 int pair[MAX_STUDENT][MAX_STUDENT];
 
@@ -29,15 +34,17 @@ void check_pair(int * need_pair, int student, int num_student, int* sum)
 
 	for (int i = student+1; i < num_student; i++)
 	{
-		need_pair[student] = 1;
 		if (pair[student][i] && need_pair[i] == 0)
 		{
+			need_pair[student] = 1;
 			need_pair[i] = 1;
+			
 			check_pair(need_pair, student + 1, num_student, sum);
+			
 			need_pair[i] = 0;
-		}
-		need_pair[student] = 0;
+			need_pair[student] = 0;
 
+		}
 	}
 
 	return ;
@@ -49,14 +56,14 @@ int main()
 	int num_student, pair_student;
 	int student_a, student_b;
 	int sum;
-	freopen("sample.txt", "r", stdin);
+	//freopen("sample.txt", "r", stdin);
 
 	scanf("%d", &T);
 
 	for (test_case = 0; test_case < T; test_case++)
 	{
 		int res = 0; 
-		int need_pair[MAX_STUDENT] = { 0 }; // 0 value is needed pair, 1 valude is already had pair.
+		int need_pair[MAX_STUDENT] = { 0 }; // 0 value is needed pair, 1 value is already had pair.
 
 		scanf("%d %d", &num_student, &pair_student);
 		for (int i = 0; i < pair_student; i++)
