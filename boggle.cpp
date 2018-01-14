@@ -1,3 +1,9 @@
+//
+//  Problem : https://algospot.com/judge/problem/read/BOGGLE
+//
+//  Created by JK on 2018. 1. 14.
+//
+
 #include <stdio.h>
 #include <string.h>
 
@@ -16,49 +22,46 @@ void clear_flag_arr()
 	memset(depth_flag, 0, sizeof(int)*LINE*LINE*MAX_LENGTH);
 	return ;
 }
+inline int isOutOfRange(int y, int x)
+{
+	return (y >= LINE || y < 0 || x >= LINE || x < 0);
+}
 
 int check(int y, int x, int index, int depth)
 {
 	if (answer[index][depth] == '\0')
 		return 1;
 
+	if(isOutOfRange(y, x))
+		return 0;
+
 	/* if the flag was checked, no need to check 8 direction from the current position.
 	already checked impossible. */
 	if (depth_flag[y][x][depth]) 
 		return 0;
 
-	int res; 
-
+	if(game[y][x] != answer[index][depth])
+		return 0;
+	
 	for (int i = 0; i < 8; i++)
 	{
-		if (y + dy[i] >= LINE || y + dy[i] < 0 || x + dx[i] >= LINE || x + dx[i] < 0)
-			continue;
-		if (game[y + dy[i]][x + dx[i]] == answer[index][depth])
-		{
-			res = check(y + dy[i], x + dx[i], index, depth + 1);
-			if (res)
-				return 1;
-		}
+		if (check(y + dy[i], x + dx[i], index, depth + 1))
+			return 1;
 	}
 
 	depth_flag[y][x][depth] = 1;
-	
+
 	return 0;
 }
+
 int check_answer(int index)
 {
-	int res = 0;
-
 	for (int y = 0; y < LINE; y++) {
 		for (int x = 0; x < LINE; x++) {
-			if (game[y][x] == answer[index][0])
-				res = check(y, x, index, 1);
-
-			if (res)
+			if (check(y, x, index, 0))
 				return 1;
 		}
 	}
-
 
 	return 0;
 }
