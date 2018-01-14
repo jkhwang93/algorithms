@@ -21,8 +21,10 @@ int check(int y, int x, int index, int depth)
 {
 	if (answer[index][depth] == '\0')
 		return 1;
-	
-	if (depth_flag[y][x][depth]) // already check.
+
+	/* if the flag was checked, no need to check 8 direction from the current position.
+	already checked impossible. */
+	if (depth_flag[y][x][depth]) 
 		return 0;
 
 	int res; 
@@ -63,7 +65,7 @@ int check_answer(int index)
 
 int main()
 {
-	freopen("sample.txt", "r", stdin);
+	//freopen("sample.txt", "r", stdin);
 	
 	int T;
 	scanf("%d", &T);
