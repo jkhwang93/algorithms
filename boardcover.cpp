@@ -1,3 +1,9 @@
+//
+//  Problem : https://algospot.com/judge/problem/read/BOARDCOVER
+//
+//  Created by JK on 2018. 1. 21.
+//
+
 #include <stdio.h>
 #include <string.h>
 
