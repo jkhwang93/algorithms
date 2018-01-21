@@ -1,55 +1,64 @@
+//
+//  Problem : https://algospot.com/judge/problem/read/QUADTREE
+//
+//  Created by JK on 2018. 1. 21.
+//
+
 #include <stdio.h>
 
-char str[1001];
+const int MAX = 1000;
+char tree[MAX+1];
 
-void change_arr(int prev, int last, int end)
+void change_arr(int first, int second, int end)
 {
 
-	char change_arr[1001] = { 0 };
+	char change_tree[MAX+1] = { 0 };
 	int index = 0;
 
-	for (int i = last; i < end; i++)
+	for (int i = second; i < end; i++)
 	{
-		change_arr[index] = str[i];
+		change_tree[index] = tree[i];
 		index++;
 	}
-	for (int i = prev; i < last; i++)
+	for (int i = first; i < second; i++)
 	{
-		change_arr[index] = str[i];
+		change_tree[index] = tree[i];
 		index++;
 	}
 
 	index = 0;
-	for (int i = prev; i < end; i++)
+	for (int i = first; i < end; i++)
 	{
-		str[i] = change_arr[index];
+		tree[i] = change_tree[index];
 		index++;
 	}
-
 	return;
 }
 
-int revert_tree(int index)
+void revert_tree(int index, int& revert_size)
 {
-	if (str[index] != 'x')
+	if (tree[index] != 'x')
 	{
-		return 1;
+		revert_size = 1;
+		return;
 	}
 
-	int length[4] = { 0 };
-	int location[4] = { 0 };
+	int node_length[4] = { 0 };
+	int node_index[4] = { 0 };
 	
-	int total_length = 1; // 'x' current length
+	int total_length = 1; // 'x' length
 
 	for (int i = 0; i < 4; i++)
 	{
-		location[i] = index + total_length;
-		length[i] = revert_tree(location[i]);
-		total_length += length[i];
+		node_index[i] = index + total_length;
+		revert_tree(node_index[i], node_length[i]);
+		total_length += node_length[i];
 	}
-	change_arr(location[0], location[2], index+total_length);
 
-	return total_length;
+	change_arr(node_index[0], node_index[2], index+total_length);
+
+	revert_size = total_length;
+	return;
 }
 
 int main()
@@ -59,9 +68,11 @@ int main()
 	scanf("%d", &test_case);
 	for (int t = 0; t < test_case; t++)
 	{
-		scanf("%s", str);
-		revert_tree(0);
-		printf("%s\n", str);
+		int revert_length = 0;
+
+		scanf("%s", tree);
+		revert_tree(0, revert_length);
+		printf("%s\n", tree);
 	}
 	return 0;
 }
