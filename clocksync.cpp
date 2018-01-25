@@ -10,9 +10,7 @@ const int CLOCK_SIZE = 16;
 const int SWITCH_NUM = 10;
 const int MAX_LINK = 5;
 
-const int PLUS = 1;
-const int MINUS = 0;
-const int MAX = 987654321;
+const int INF = 987654321;
 
 const int clock_link[SWITCH_NUM][MAX_LINK + 1] = {
 {0,1,2,-1},
@@ -29,25 +27,21 @@ const int clock_link[SWITCH_NUM][MAX_LINK + 1] = {
 int clock[CLOCK_SIZE];
 int min_click_sum;
 
-void count_clock(int button, int click_num, int flag)
+void count_clock(int button)
 {
 	int index = 0;
 
 	while (clock_link[button][index] != -1)
 	{
-		if (flag == PLUS)
-			clock[clock_link[button][index]] = (clock[clock_link[button][index]] + (3 * click_num) + 12) % 12;
-		else
-			clock[clock_link[button][index]] = (clock[clock_link[button][index]] - (3 * click_num) + 12) % 12;
-		
+		clock[clock_link[button][index]] = ((clock[clock_link[button][index]] + 3) % 12);
 		index++;
 	}
 }
 
-int click_switch(int button , int click_sum)
+void click_switch(int button , int click_sum)
 {
 	if (click_sum > min_click_sum)
-		return min_click_sum;
+		return ;
 		
 	if (button == SWITCH_NUM)
 	{
@@ -58,20 +52,18 @@ int click_switch(int button , int click_sum)
 			sum_clock += clock[index];
 			index++;
 		}
-		if(!sum_clock)
-			min_click_sum = min_click_sum < click_sum ? min_click_sum : click_sum;
-		
-		return min_click_sum;
+		min_click_sum = sum_clock ? min_click_sum : click_sum;
+
+		return ;
 	}
 
 	for (int i = 0; i < 4; i++)
 	{
-		count_clock(button, i, PLUS);
 		click_switch(button + 1, click_sum + i);
-		count_clock(button, i, MINUS);
+		count_clock(button);
 	}
 
-	return min_click_sum;
+	return ;
 }
 
 int main()
@@ -82,15 +74,16 @@ int main()
 
 	for (int i = 0; i < test_case; i++)
 	{
-		min_click_sum = MAX;
+		min_click_sum = INF;
 		for (int j = 0; j < CLOCK_SIZE; j++)
 		{
 			scanf("%d", &clock[j]);
+			clock[j] %= 12;
 		}
 
 		click_switch(0,0);
 		
-		if (min_click_sum == MAX)
+		if (min_click_sum == INF)
 			min_click_sum = -1;
 
 		printf("%d\n", min_click_sum);
