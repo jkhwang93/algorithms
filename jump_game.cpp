@@ -10,7 +10,7 @@
 const int MAX_SIZE = 100;
 
 int board[MAX_SIZE + 1][MAX_SIZE + 1];
-bool is_jump_possible[MAX_SIZE + 1][MAX_SIZE + 1];
+int is_jump_possible[MAX_SIZE + 1][MAX_SIZE + 1];
 
 int board_size;
 
@@ -18,20 +18,20 @@ inline bool is_out_of_area(int y, int x)
 {
 	return ((y >= board_size) || (x >= board_size));
 }
-bool jump(int y, int x)
+int is_reachable(int y, int x)
 {
 	if (is_out_of_area(y, x))
-		return false;
+		return 0;
 
-	if (!is_jump_possible[y][x])
-		return false;
-	
-	if (board[y][x] == 0)
-		return true;
+	if (is_jump_possible[y][x] != -1)
+		return is_jump_possible[y][x];
 
-	bool& ret = is_jump_possible[y][x];
+	int& ret = is_jump_possible[y][x];
 
-	return ret = (jump(y + board[y][x], x) || jump(y, x + board[y][x]));
+	if (y == (board_size - 1) && x == (board_size - 1))
+		return ret = 1;
+
+	return ret = (is_reachable(y + board[y][x], x) || is_reachable(y, x + board[y][x]));
 }
 
 int main()
@@ -43,7 +43,7 @@ int main()
 	for (int t = 0 ; t < test_case ; t++) 
 	{
 		memset(board, -1, sizeof(board));
-		memset(is_jump_possible, true, sizeof(is_jump_possible));
+		memset(is_jump_possible, -1, sizeof(is_jump_possible));
 
 		scanf("%d", &board_size);
 
@@ -55,7 +55,7 @@ int main()
 			}
 		}
 		
-		printf("%s\n", jump(0, 0) ? "YES" : "NO");
+		printf("%s\n", is_reachable(0, 0) == 1 ? "YES" : "NO");
 	}
 
 	return 0;
