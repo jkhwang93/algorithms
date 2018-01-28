@@ -37,28 +37,15 @@ int cal_area(int left, int right)
 		if (left == low && right == high)
 			break;
 		
-		if (low == left)
+		if (high == right || ((low != left) && (fence_height[low - 1] > fence_height[high + 1])))
 		{
-			height = height < fence_height[high+1] ? height : fence_height[high+1];
-			high++;
-		}
-		else if (high == right)
-		{
-			height = height < fence_height[low-1] ? height : fence_height[low-1];
+			height = height < fence_height[low - 1] ? height : fence_height[low - 1];
 			low--;
 		}
 		else
 		{
-			if (fence_height[low-1] > fence_height[high+1])
-			{
-				height = height < fence_height[low-1] ? height : fence_height[low-1];
-				low--;
-			}
-			else
-			{
-				height = height < fence_height[high+1] ? height : fence_height[high+1];
-				high++;
-			}
+			height = height < fence_height[high + 1] ? height : fence_height[high + 1];
+			high++;
 		}
 	}
 
